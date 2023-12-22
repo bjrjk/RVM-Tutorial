@@ -12,6 +12,7 @@ mod hal;
 mod mm;
 
 use arch::{ArchPerCpuState, RvmVcpu};
+use raw_cpuid::CpuId;
 
 pub use error::{RvmError, RvmResult};
 pub use hal::RvmHal;
@@ -20,6 +21,12 @@ pub use mm::{GuestPhysAddr, GuestVirtAddr, HostPhysAddr, HostVirtAddr};
 /// Whether the hardware has virtualization support.
 pub fn has_hardware_support() -> bool {
     arch::has_hardware_support()
+}
+
+pub fn print_CPU_info() {
+    let CpuId_instance = CpuId::new();
+    info!("Vendor: {}", CpuId_instance.get_vendor_info().unwrap().as_str());
+    info!("Brand: {}", CpuId_instance.get_processor_brand_string().unwrap().as_str());
 }
 
 /// Host per-CPU states to run the guest. All methods must be called on the corresponding CPU.
